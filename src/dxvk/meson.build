@@ -321,6 +321,8 @@ dxvk_src = files([
   'rtx_render/rtx_scene_manager.h',
   'rtx_render/rtx_semaphore.cpp',
   'rtx_render/rtx_semaphore.h',
+  'rtx_render/rtx_shader_aware_reconstruction.cpp',
+  'rtx_render/rtx_shader_aware_reconstruction.h',
   'rtx_render/rtx_shader_manager.cpp',
   'rtx_render/rtx_shader_manager.h',
   'rtx_render/rtx_sparse_unique_cache.h',

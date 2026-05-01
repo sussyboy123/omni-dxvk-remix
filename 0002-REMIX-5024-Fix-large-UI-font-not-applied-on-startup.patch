@@ -1,0 +1,40 @@
+From 439cf4c85b2e34d9802fd57a4c6584e8fb0dbd1a Mon Sep 17 00:00:00 2001
+From: Mark Henderson <markh@nvidia.com>
+Date: Mon, 27 Apr 2026 16:10:55 +0000
+Subject: [PATCH 2/2] [REMIX-5024] Fix large UI font not applied on startup
+
+The largeUiMode setting was persisted correctly but FontDefault was
+unconditionally set to m_regularFont during font creation, ignoring the
+saved preference. Move the FontDefault assignment to after both fonts
+are loaded and make it conditional on largeUiMode().
+
+Fixes #5024
+---
+ src/dxvk/imgui/dxvk_imgui.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/dxvk/imgui/dxvk_imgui.cpp b/src/dxvk/imgui/dxvk_imgui.cpp
+index 21b4b01c..16c70a25 100644
+--- a/src/dxvk/imgui/dxvk_imgui.cpp
++++ b/src/dxvk/imgui/dxvk_imgui.cpp
+@@ -4278,7 +4278,6 @@ namespace dxvk {
+     {
+       // Add letters/symbols (NVIDIA-Sans)
+       m_regularFont = io.Fonts->AddFontFromMemoryTTF(&___NVIDIASansMd[0], nvidiaSansLength, 0, &normalFontCfg, characterRange.Data);
+-      io.FontDefault = m_regularFont;
+ 
+       // Enable merging
+       normalFontCfg.MergeMode = true;
+@@ -4311,6 +4310,9 @@ namespace dxvk {
+ 
+     io.Fonts->Build();
+ 
++    // Apply the correct default font based on largeUiMode setting
++    io.FontDefault = largeUiMode() ? m_largeFont : m_regularFont;
++
+ 
+     // Allocate/upload glyph cache...
+ 
+-- 
+2.50.1.windows.1
+
